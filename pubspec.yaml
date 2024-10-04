@@ -1,0 +1,30 @@
+name: pointer_interceptor_android
+description: Android implementation of the pointer_interceptor plugin.
+version: 0.0.1
+
+environment:
+  sdk: ^3.3.0
+  flutter: ">=3.19.0"
+
+flutter:
+  plugin:
+    implements: pointer_interceptor
+    platforms:
+      android:
+        package: com.gynzy.pointer_interceptor_android
+        pluginClass: PointerInterceptorAndroidPlugin
+        dartPluginClass: PointerInterceptorAndroid
+
+dependencies:
+  flutter:
+    sdk: flutter
+  plugin_platform_interface: ^2.1.7
+  pointer_interceptor_platform_interface: ^0.10.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+topics:
+  - pointer-interceptor
+  - android
