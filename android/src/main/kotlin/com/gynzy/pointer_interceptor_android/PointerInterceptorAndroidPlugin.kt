@@ -16,11 +16,6 @@ class PointerInterceptorAndroidPlugin: FlutterPlugin, MethodCallHandler {
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     channel = MethodChannel(flutterPluginBinding.binaryMessenger, "pointer_interceptor_android")
     channel.setMethodCallHandler(this)
-
-    flutterPluginBinding.platformViewRegistry.registerViewFactory(
-        "pointer_interceptor_android_view",
-        PointerInterceptorViewFactory()
-    )
   }
 
   override fun onMethodCall(call: MethodCall, result: Result) {
