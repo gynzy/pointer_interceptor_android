@@ -11,7 +11,10 @@ class PointerInterceptorAndroid extends PointerInterceptorPlatform {
   Widget buildWidget({required Widget child, bool debug = false, Key? key}) {
     return Stack(alignment: Alignment.center, children: <Widget>[
       Opacity(
-        opacity: 0.2,
+        opacity: 0.0,
+
+        /// A WebViewWidget is needed to ensure pointer events are also
+        /// intercepted when a WebView is present in the widget tree.
         child: WebViewWidget(controller: WebViewController()),
       ),
       child,
