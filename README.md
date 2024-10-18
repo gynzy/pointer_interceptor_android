@@ -1,6 +1,6 @@
 # pointer_interceptor_android
 
-The iOS implementation of [`pointer interceptor`][1].
+The Android implementation of [`pointer interceptor`][1].
 
 ## Usage
 
