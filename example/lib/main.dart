@@ -1,63 +1,63 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-
-import 'package:flutter/services.dart';
-import 'package:pointer_interceptor_android/pointer_interceptor_android.dart';
+import 'package:pointer_interceptor_platform_interface/pointer_interceptor_platform_interface.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(home: PointerInterceptorAndroidExample()));
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-  final _pointerInterceptorAndroidPlugin = PointerInterceptorAndroid();
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await _pointerInterceptorAndroidPlugin.getPlatformVersion() ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
-  }
+class _DummyPlatformView extends StatelessWidget {
+  const _DummyPlatformView();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
+    final controller = WebViewController();
+    controller.loadRequest(Uri.parse('https://flutter.dev/docs'));
+
+    return WebViewWidget(controller: controller);
+  }
+}
+
+/// Example flutter app with a button overlaying the native view.
+class PointerInterceptorAndroidExample extends StatefulWidget {
+  /// Constructor
+  const PointerInterceptorAndroidExample({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return _PointerInterceptorAndroidExampleState();
+  }
+}
+
+class _PointerInterceptorAndroidExampleState
+    extends State<PointerInterceptorAndroidExample> {
+  bool _buttonTapped = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
+      child: Stack(
+        alignment: AlignmentDirectional.center,
+        children: <Widget>[
+          const _DummyPlatformView(),
+          PointerInterceptorPlatform.instance.buildWidget(
+              child: TextButton(
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.red,
+                    backgroundColor: Colors.yellow,
+                    textStyle: const TextStyle(fontSize: 30),
+                  ),
+                  child: _buttonTapped
+                      ? const Text('Tapped')
+                      : const Text('Initial'),
+                  onPressed: () {
+                    setState(() {
+                      _buttonTapped = !_buttonTapped;
+                    });
+                  })),
+        ],
       ),
-    );
+    ));
   }
 }
